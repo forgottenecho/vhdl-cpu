@@ -5,14 +5,14 @@ entity MUX4to1Tb is
 end entity;
 
 architecture sim of MUX4to1Tb is
-    signal a : std_logic_vector (3 downto 0) := "0001";
-    signal b : std_logic_vector (3 downto 0) := "1010";
-    signal c : std_logic_vector (3 downto 0) := "0011";
-    signal d : std_logic_vector (3 downto 0) := "0100";
+    signal a : std_logic_vector (7 downto 0) := x"AA";
+    signal b : std_logic_vector (7 downto 0) := x"BB";
+    signal c : std_logic_vector (7 downto 0) := x"CC";
+    signal d : std_logic_vector (7 downto 0) := x"DD";
 
     signal sel : std_logic_vector (1 downto 0);
 
-    signal result : std_logic_vector (3 downto 0);
+    signal result : std_logic_vector (7 downto 0);
     
 begin
     MUX : entity work.MUX4to1(rtl) port map(

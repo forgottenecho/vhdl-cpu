@@ -46,7 +46,23 @@ begin
         wait for 10 ns;
 
         -- test arithmetic functions
-        ALUS <= '0' & "XX" & '0' & "00" & '0';
+        testAC <= x"F0";
+        testDR <= x"A5";
+
+        -- AC + 0 + 1 = 0xF0 + 0x1 = 0xF1
+        ALUS <= '0' & "XX" & '1' & "00" & '1';
+        wait for 10 ns;
+
+        -- AC + BUS + 0 = 0x195 --> carry discarded --> 0x95
+        ALUS <= '0' & "XX" & '0' & "10" & '1';
+        wait for 10 ns;
+
+        -- AC + /BUS + 1 = 0xF0 - 0xA5 = 0x4B
+        ALUS <= '0' & "XX" & '1' & "01" & '1';
+        wait for 10 ns;
+
+        -- 0 + BUS + 0 = 0xA5
+        ALUS <= '0' & "XX" & '0' & "10" & '0';
         wait for 10 ns;
 
     end process;

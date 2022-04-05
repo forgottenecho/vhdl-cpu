@@ -18,25 +18,49 @@ port(
 end entity;
 
 architecture rtl of ALU is 
+    -- base input to arithmetic MUX
+    signal NOTbus : std_logic_vector (7 downto 0);
+
+    -- base inputs to logic MUX
     signal ANDresult : std_logic_vector (7 downto 0);
     signal ORresult : std_logic_vector (7 downto 0);
     signal XORresult : std_logic_vector (7 downto 0);
     signal NOTresult : std_logic_vector (7 downto 0);
 
+    -- MUX intermediate values
+    signal arithmeticIntermediate1 : std_logic_vector (7 downto 0);
+    signal arithmeticIntermediate2 : std_logic_vector (7 downto 0);
     signal arithmeticOutput : std_logic_vector (7 downto 0);
     signal logicalOutput : std_logic_vector (7 downto 0);
 
     -- fix ALUS miswiring
+    signal arithmeticMUX2Sel : std_logic_vector (1 downto 0);
     signal logicalMUXSel : std_logic_vector (1 downto 0);
 
-begin
-    masterMUX: entity work.MUX2to1 port map(
-        a => arithmeticOutput,
-        b => logicalOutput,
-        sel => ALUS(6), -- ALUS7 is at ALUS(6)
-        y => output);
+begin    
 
-    logicMUX : entity work.MUX4to1 port map(
+    arithmeticMUX1 : entity work.MUX2to1(rtl) port map(
+        a => x"00",
+        b => fromAC,
+        sel => ALUS(0), -- ALUS1
+        y => arithmeticIntermediate1);
+
+    arithmeticMUX2 : entity work.MUX4to1(rtl) port map(
+        a => x"00",
+        b => fromDR,
+        c => NOTbus,
+        d => "XXXXXXXX",
+        sel => arithmeticMUX2Sel,
+        y => arithmeticIntermediate2);
+
+    ParaAdder : entity work.ParaAdder8Bit(rtl) port map(
+        a => arithmeticIntermediate1,
+        b => arithmeticIntermediate2,
+        cin => ALUS(3), -- ALUS4
+        s => arithmeticOutput,
+        co => open); -- carry out gets thrown away in design
+
+    logicMUX : entity work.MUX4to1(rtl) port map(
         a => ANDresult,
         b => ORresult,
         c => XORresult,
@@ -44,15 +68,26 @@ begin
         sel => logicalMUXSel,
         y => logicalOutput); 
 
+    masterMUX: entity work.MUX2to1(rtl) port map(
+        a => arithmeticOutput,
+        b => logicalOutput,
+        sel => ALUS(6), -- ALUS7 is at ALUS(6)
+        y => output);
+
     -- fix ALUS miswiring
     process(ALUS(5 downto 4), ALUS(2 downto 1)) is
     begin
+        arithmeticMUX2Sel <= ALUS(1) & ALUS(2); -- <ALUS2, ALUS3>
         logicalMUXSel <= ALUS(4) & ALUS(5); -- <ALUS5, ALUS6>
     end process;
 
-    -- handle inputs to logicMUX
+    -- handle base inputs to MUXs
     process(fromDR, fromAC) is
     begin
+        -- input to arithmetic MUX
+        NOTbus <= not fromDR;
+
+        -- inputs to logic MUX
         ANDresult <= fromDR and fromAC;
         ORresult <= fromDR or fromAC;
         XORresult <= fromDR xor fromAC;

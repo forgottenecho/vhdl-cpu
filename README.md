@@ -14,5 +14,19 @@ A relatively simple CPU implemented in VHDL
 | 6 | IRLOAD | 17 | BUSMEM |
 | 7 | RLOAD | 18 | READ |
 | 8 | ACLOAD | 19 | WRITE |
-| 9 | ZLOAD | 20-26 | ALUS[1:7] |
+| 9 | ZLOAD | 20-26 | ALUS[0-6] |
 | 10 | PCBUS | |
+
+### Microcode Memory Bit Fields
+| Bit | Signal |
+| --- | --- |
+| 0-5 | Addr (used if branching) |
+| 6-7 | Condition |
+| 8 | Branch Type |
+| 9-35 | Control Signals |
+
+
+## Looking Forward
+- Load ROM from file
+- change ALU's sub-module's port mappings to not use intermediates
+- 

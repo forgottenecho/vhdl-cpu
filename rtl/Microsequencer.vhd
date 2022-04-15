@@ -6,7 +6,7 @@ use ieee.numeric_std.all;
 entity MicroSequencer is
 port(
 	clk : in std_logic;
-	z_flag : in std_logic;
+	zFlag : in std_logic;
 	
 	-- see README.md for which bits of ctrlSignals correspond to which control singals
 	ctrlSignals : out std_logic_vector(26 downto 0)

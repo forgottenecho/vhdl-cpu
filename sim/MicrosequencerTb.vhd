@@ -11,7 +11,7 @@ architecture sim of MicrosequencerTb is
 begin
 	useq : entity work.Microsequencer(rtl) port map(
 		clk => clk,
-		z_flag => z,
+		zFlag => z,
 		ctrlSignals => csigs
 	);
 	

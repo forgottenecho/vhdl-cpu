@@ -7,6 +7,7 @@ entity MicroSequencer is
 port(
 	clk : in std_logic;
 	zFlag : in std_logic;
+	IR : in std_logic_vector(7 downto 0);
 	
 	-- see README.md for which bits of ctrlSignals correspond to which control singals
 	ctrlSignals : out std_logic_vector(26 downto 0)
@@ -16,7 +17,8 @@ end entity;
 architecture rtl of MicroSequencer is
 	signal addrRegister : std_logic_vector(5 downto 0) := "000000";
 	signal addrPlusOne : std_logic_vector(5 downto 0);
-	signal nextAddr : std_logic_vector(5 downto 0);
+	signal mapFuncAddr : std_logic_vector(5 downto 0);
+	signal condition : std_logic;
 	
 	-- unused signal, port map unused output bits to this signal
 	signal trash : std_logic_vector(1 downto 0);
@@ -25,10 +27,11 @@ architecture rtl of MicroSequencer is
 	signal dataOut : std_logic_vector(63 downto 0);
 	type ROM is array (0 to 63) of std_logic_vector(63 downto 0);
 	constant uMem : ROM := (
-		0 => x"0000000" & "000000000000000000000000000" & '1' & "00" & "000001", -- NOP1
-		1 => x"0000000" & "000000000000000000000000000" & '1' & "00" & "000010", -- FECTH1
-		2 => x"0000000" & "000000000000000000000000000" & '1' & "00" & "000011", -- FETCH2
-		3 => x"0000000" & "000000000000000000000000000" & '1' & "00" & "000001", -- FETCH3
+		--   PADDING      CONTROL SIGNALS                 BT    CSel   ADDR
+		0 => x"0000000" & "000000000000000000000000000" & '0' & "00" & "000001", -- NOP1
+		1 => x"0000000" & "000000000000000000000000000" & '0' & "00" & "000010", -- FECTH1
+		2 => x"0000000" & "000000000000000000000000000" & '0' & "00" & "000011", -- FETCH2
+		3 => x"0000000" & "000000000000000000000000000" & '1' & "--" & "------", -- FETCH3
         4 => x"FFFFFFFFFFFFFFFF",
         5 => x"FFFFFFFFFFFFFFFF",
         6 => x"FFFFFFFFFFFFFFFF",
@@ -65,11 +68,11 @@ architecture rtl of MicroSequencer is
         37 => x"FFFFFFFFFFFFFFFF",
         38 => x"FFFFFFFFFFFFFFFF",
         39 => x"FFFFFFFFFFFFFFFF",
-        40 => x"FFFFFFFFFFFFFFFF",
+        40 => x"0000000" & "000000000000000000000000000" & '0' & "00" & "000001", -- INAC 1
         41 => x"FFFFFFFFFFFFFFFF",
         42 => x"FFFFFFFFFFFFFFFF",
         43 => x"FFFFFFFFFFFFFFFF",
-        44 => x"FFFFFFFFFFFFFFFF",
+        44 => x"0000000" & "000000000000000000000000000" & '0' & "00" & "000001", -- CLAC 1
         45 => x"FFFFFFFFFFFFFFFF",
         46 => x"FFFFFFFFFFFFFFFF",
         47 => x"FFFFFFFFFFFFFFFF",
@@ -90,30 +93,6 @@ architecture rtl of MicroSequencer is
         62 => x"FFFFFFFFFFFFFFFF",
         63 => x"FFFFFFFFFFFFFFFF");
 begin
-	-- select the next address for uMem
-	addrMUX : entity work.MUX4to1(rtl) port map(
-		-- gets current addr plus one
-		a(7 downto 6) => "XX",
-		a(5 downto 0) => addrPlusOne,
-		
-		-- gets addr from uMem
-		b(7 downto 6) => "XX",
-		b(5 downto 0) => dataOut(5 downto 0),
-		
-		-- gets addr from mapping hardware
-		c(7 downto 6) => "XX",
-		c(5 downto 0) => "XXXXXX", -- FIXME
-		
-		-- unused
-		d => "XXXXXXXX",
-		
-		sel => "01", -- FIXME
-		
-		y(7 downto 6) => trash, -- unused
-		y(5 downto 0) => nextAddr);
-	
-	--condMUX : entity work.MUX4to1(rtl) port map(
-	--);
 	
 	plusOne : entity work.ParaAdder8bit(rtl) port map(
 		a(7 downto 6) => "00",
@@ -128,17 +107,47 @@ begin
 	process(clk) is
 	begin
 		if rising_edge(clk) then
+		
 			-- perform register transfer, its the only synchronous component
-			addrRegister <= nextAddr;
+			if dataOut(8) = '0' then
+				-- BT = 0 means we look at the condition for next addr
+				
+				if condition = '0' then
+					-- do not jump microcode states
+					addrRegister <= addrPlusOne;
+				elsif condition = '1' then
+					-- jump to the microcode state addressed by ADDR
+					addrRegister <= dataOut(5 downto 0);
+				end if;
+			elsif dataOut(8) = '1' then	
+				-- BT = 1 means we use the mapping function for next addr
+				addrRegister <= mapFuncAddr;
+			end if;
+			
 		end if;
 	end process;
 	
+	-- access ROM when address input changes
 	process(addrRegister) is
 	begin
-		-- acces the ROM
 		dataOut <= uMem(to_integer(unsigned(addrRegister)));
-		
-		
+	end process;
+	
+	-- perform the mapping function when instruction reg changes
+	process(IR) is
+	begin
+		mapFuncAddr <= IR(3 downto 0) & "00";
+	end process;
+	
+	-- evaluate condition when condition select bits are changed
+	process(dataOut(7 downto 6)) is
+	begin
+		case dataOut(7 downto 6) is
+			when "00" => condition <= '1';
+			when "01" => condition <= zFlag;
+			when "10" => condition <= not zFlag;
+			when others => condition <= 'X';
+		end case;
 	end process;
 	
 end architecture;

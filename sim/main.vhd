@@ -56,34 +56,39 @@ architecture sim of main is
 			-- CONTROL SIGNAL MAPPINGS ARE HERE https://github.com/forgottenecho/vhdl-cpu/blob/main/README.md
 			
 			-- if ARINC is HIGH, 
-			if csigs(0) == '1' then
+			if csigs(0) = '1' then
 				AR <= ARPlusOne;
 			end if;
 			
 			-- PCINC
-			if csigs(1) == '1' then
+			if csigs(1) = '1' then
 				PC <= PCPlusOne;
 			end if;
 			
 			-- ARLOAD
-			if csigs(2) == '1' then
+			if csigs(2) = '1' then
 				AR <= mainBus;
 			end if;
 			
 			-- PCLOAD
-			if csigs(3) == '1' then
+			if csigs(3) = '1' then
 				PC <= mainBus;
 			end if;
 			
-			-- HANDLE SIGNALS 4-10!!!
+			-- HANDLE SIGNALS 4-9!!!
+			
+			-- PCBUS
+			if csigs(10) = '1' then
+				mainBus <= PC;
+			end if;
 			
 			-- DRHBUS
-			if csigs(11) == '1' then
+			if csigs(11) = '1' then
 				mainBus(15 downto 8) <= DR;
 			end if;
 				
 			-- DRLBUS
-			if csigs(12) == '1' then
+			if csigs(12) = '1' then
 				mainBus(7 downto 0) <= DR;
 			end if;
 			

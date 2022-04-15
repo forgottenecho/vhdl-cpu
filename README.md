@@ -21,7 +21,7 @@ A relatively simple CPU implemented in VHDL
 | Bit | Signal |
 | --- | --- |
 | 0-5 | Addr (used if branching) |
-| 6-7 | Condition |
+| 6-7 | Condition Sel |
 | 8 | Branch Type |
 | 9-35 | Control Signals |
 

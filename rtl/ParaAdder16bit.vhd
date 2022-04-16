@@ -15,22 +15,23 @@ architecture rtl of ParaAdder16bit is
     signal carry : std_logic;
 
 begin
+    -- lower order bits
     Para8Bit1 : entity work.ParaAdder8bit(rtl) port map(
-    a => a(15 downto 8),
-    b => b(15 downto 8),
-    cin => '0',
-
-    s => s(15 downto 8)
-    co => carry
-
-    );
-        
-    -- other adder
-    Para8Bit2 : entity work.ParaAdder8bit(rtl) port map(
     a => a(7 downto 0),
     b => b(7 downto 0),
-    cin => carry,
+    cin => cin,
 
     s => s(7 downto 0),
-    co => open);
+    co => carry);
+        
+    -- higher order bits
+    Para8Bit2 : entity work.ParaAdder8bit(rtl) port map(
+    a => a(15 downto 8),
+    b => b(15 downto 8),
+    cin => carry,
+
+    s => s(15 downto 8)
+    co => co
+
+    );
 end architecture;

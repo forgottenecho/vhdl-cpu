@@ -16,10 +16,13 @@ architecture rtl of ParaAdder16bit is
 
 begin
     Para8Bit1 : entity work.ParaAdder8bit(rtl) port map(
-    a(7 downto 0) =>
-    b
+    a => a(15 downto 8),
+    b => b(15 downto 8),
 
     );
+        
+    -- other adder
+    a => a(7 downto 0),
 
 
 end architecture;

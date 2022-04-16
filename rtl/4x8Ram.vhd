@@ -19,4 +19,13 @@ architecture sim of 4x8Ram is
 
     );
 
-    end architecture;
+begin
+process(clock)
+begin
+    if(rising_edge(clock)) then
+        if (write_in = '1') then
+            RamData(to_integer(unsigned(address))) <= data_in;
+        end if
+    end if
+end process
+end architecture;

@@ -47,6 +47,12 @@ architecture sim of main is
 		s => PCPlusOne,
 		co => open);
 	
+	entity ALU : work.ALU(rtl) port map(
+		fromMEM <= mainBus(7 downto 0),
+		fromAC <= AC,
+		ALUS => 
+
+	)
 	-- this is a process, you can think of it as a program thread, it runs concurrently with other processes
 	process(clk)
 		-- any variables local to the process go here (I usually just use signals, which are global "variables" defined above)
@@ -76,6 +82,35 @@ architecture sim of main is
 			end if;
 			
 			-- HANDLE SIGNALS 4-9!!!
+			-- DRLOAD
+			if csigs(4) = '1' then
+				DR <= mainBus(7 downto 0);
+			end if;
+
+			-- TRLOAD
+			if csigs(5) = '1' then
+				TR <= DR;
+			end if;
+
+			-- IRLOAD
+			if csigs(6) = '1' then
+				IR <= DR;
+			end if;
+
+			-- RLOAD
+			if csigs(7) = '1' then
+				R <= mainBus(7 downto 0);
+			end if;
+
+			-- ACLOAD (temp)
+			if csigs(8) = '1' then
+				AC <= ALU
+			end if;
+
+			-- ZLOAD
+			if csigs(9) = '1' then
+				Z <= --nor gated ALU
+			end if;
 			
 			-- PCBUS
 			if csigs(10) = '1' then
@@ -93,7 +128,42 @@ architecture sim of main is
 			end if;
 			
 			-- HANDLE SIGNALS 13-19
-			
+			-- TRBUS
+			if csigs(13) = '1' then
+				mainBus(7 downto 0) <= TR;
+			end if;
+
+			-- RBUS
+			if csigs(14) = '1' then
+				mainBus(7 downto 0) <= R;
+			end if;
+
+			-- ACBUS
+			if csigs(15) = '1' then
+				mainBus(7 downto 0) <= AC;
+			end if;
+
+			-- MEMBUS
+			if csigs(16) = '1' then
+				mainBus(7 downto 0) <= MEM;
+			end if;
+
+			-- BUSMEM
+			if csigs(17) = '1' then
+				MEM <= mainBus(7 downto 0);
+			end if;
+
+			-- READ
+			if csigs(18) = '1' then
+		
+			end if;
+
+			-- WRITE
+			if csigs(19) = '1' then
+
+			end if;
+
+			end if;
 			-- ALU is not a synchronous component, its control sigs are hard wired through port mapping
 			
 		end if;

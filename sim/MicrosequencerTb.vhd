@@ -60,12 +60,35 @@ begin
 		--fakeZ <= '0';
 		--wait for 140 ns;
 		
-		fakeIR <= "00000001"; -- LDAC (5 states)
-        wait for 160 ns;
+		--fakeIR <= "00000001"; -- LDAC (5 states)
+        --wait for 160 ns;
 		
-        fakeIR <= "00000010"; -- STAC (5 states)
-        wait for 160 ns;
+        --fakeIR <= "00000010"; -- STAC (5 states)
+        --wait for 160 ns;
+
+        --fakeIR <= "00000011"; -- MVAC (1 states)
+        --wait for 80 ns;
+
+        --fakeIR <= "00000100"; -- MOVR (1 states)
+        --wait for 80 ns;
+
+        fakeIR <= "00001000"; -- ADD (1 states)
+        wait for 80 ns;
 		
+        fakeIR <= "00001001"; -- SUB (1 states)
+        wait for 80 ns;		
+		
+        fakeIR <= "00001100"; -- AND (1 states)
+        wait for 80 ns;
+
+        fakeIR <= "00001101"; -- OR (1 states)
+        wait for 80 ns;
+
+        fakeIR <= "00001110"; -- XOR (1 states)
+        wait for 80 ns;
+		
+        fakeIR <= "00001111"; -- NOT (1 states)
+        wait for 80 ns;
 		
 	end process;
 end architecture;	

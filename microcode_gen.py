@@ -35,7 +35,7 @@ for i in range(num_states):
     loc = start_loc + i
 
     # get jump address in binary
-    if i < 3:
+    if i < original_num-1:
         # addr should be next mem loc
         jump_addr = bin(loc+1)
         jump_addr = jump_addr[2:] # cut off '0b'

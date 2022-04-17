@@ -52,13 +52,19 @@ begin
 		--fakeZ <= '0';
 		--wait for 120 ns;
 		
-		fakeIR <= "00000111"; -- JPNZ w/ Z=1 (3 states), should perform microcode STATE jump but not PC jump
-		fakeZ <= '1';
-		wait for 120 ns;
+		--fakeIR <= "00000111"; -- JPNZ w/ Z=1 (3 states), should perform microcode STATE jump but not PC jump
+		--fakeZ <= '1';
+		--wait for 120 ns;
 		
-		fakeIR <= "00000111"; -- JPNZ w/ Z=0 (4 states), should NOT perform ucode STATE jump but should perform PC jump
-		fakeZ <= '0';
-		wait for 140 ns;
+		--fakeIR <= "00000111"; -- JPNZ w/ Z=0 (4 states), should NOT perform ucode STATE jump but should --perform PC jump
+		--fakeZ <= '0';
+		--wait for 140 ns;
+		
+		fakeIR <= "00000001"; -- LDAC (5 states)
+        wait for 160 ns;
+		
+        fakeIR <= "00000010"; -- STAC (5 states)
+        wait for 160 ns;
 		
 		
 	end process;

@@ -6,16 +6,18 @@ end entity;
 
 architecture sim of MicrosequencerTb is
 	signal clk : std_logic;
-	signal fakeZ : std_logic := '0';
-	signal csigs : std_logic_vector(26 downto 0);
-	signal fakeIR : std_logic_vector(7 downto 0);
+	signal fakeZ : std_logic := '0'; -- emulating register file's Z register
+	signal csigs : std_logic_vector(26 downto 0); -- control signals from usequencer
+	signal fakeIR : std_logic_vector(7 downto 0); -- fake instruction register
 begin
+
 	useq : entity work.Microsequencer(rtl) port map(
 		clk => clk,
 		zFlag => fakeZ,
 		ctrlSignals => csigs,
 		IR => fakeIR);
 	
+	-- 20 ns clock cycle
 	process is
 	begin
 		clk <= '1';
@@ -25,6 +27,7 @@ begin
 	end process;
 	
 	process is
+		-- used to detect if the process is in its first loop
 		variable firstTime : integer := 1;
 	begin
 		-- for first time must wait for NOP->FETCH1 transition

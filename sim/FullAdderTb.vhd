@@ -6,7 +6,10 @@ entity FullAdderTb is
 end entity;
 
 architecture sim of FullAdderTb is
+    -- variable for looping through 000 -> 111 
     signal testSeq : unsigned (2 downto 0) := "000";
+
+    -- for hooking up the the full adder
     signal outputSum : std_logic;
     signal outputCarry : std_logic;
 begin
@@ -18,6 +21,7 @@ begin
         s => outputSum,
         co => outputCarry);
         
+    -- test output for every input combination 000 -> 111 | <cin,b,a>
     process is
     begin
         wait for 10 ns;

@@ -2,12 +2,11 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-
 entity MicroSequencer is
 port(
 	clk : in std_logic;
-	zFlag : in std_logic;
-	IR : in std_logic_vector(7 downto 0);
+	zFlag : in std_logic; -- from register file
+	IR : in std_logic_vector(7 downto 0); -- instruciton register, used in FETCH3's mapped ucode jump
 	
 	-- see README.md for which bits of ctrlSignals correspond to which control singals
 	ctrlSignals : out std_logic_vector(26 downto 0)
@@ -15,6 +14,7 @@ port(
 end entity;
 
 architecture rtl of MicroSequencer is
+	-- addressing signals
 	signal addrRegister : std_logic_vector(5 downto 0) := "000000";
 	signal addrPlusOne : std_logic_vector(5 downto 0);
 	signal mapFuncAddr : std_logic_vector(5 downto 0);
@@ -23,7 +23,7 @@ architecture rtl of MicroSequencer is
 	-- unused signal, port map unused output bits to this signal
 	signal trash : std_logic_vector(1 downto 0);
 	
-	-- 64x8B ROM for microcode memory, only 36 data bits are used though
+	-- 64x8B ROM for microcode memory, only 36 data bits are used, not all 64 locations are used either
 	signal dataOut : std_logic_vector(63 downto 0);
 	type ROM is array (0 to 63) of std_logic_vector(63 downto 0);
 	constant uMem : ROM := (
@@ -93,7 +93,8 @@ architecture rtl of MicroSequencer is
         62 => x"FFFFFFFFFFFFFFFF",
         63 => x"FFFFFFFFFFFFFFFF");
 begin
-	
+
+	-- generates the current address plus one
 	plusOne : entity work.ParaAdder8bit(rtl) port map(
 		a(7 downto 6) => "00",
 		a(5 downto 0) => addrRegister,
@@ -104,6 +105,7 @@ begin
 		s(5 downto 0) => addrPlusOne, -- will overflow to 000000
 		co => open);
 	
+	-- latch correct address in the the address register
 	process(clk) is
 	begin
 		if rising_edge(clk) then
@@ -127,7 +129,7 @@ begin
 		end if;
 	end process;
 	
-	-- access ROM when address input changes
+	-- access ROM location specified by the address
 	process(addrRegister) is
 	begin
 		dataOut <= uMem(to_integer(unsigned(addrRegister)));
@@ -143,9 +145,9 @@ begin
 	process(dataOut(7 downto 6)) is
 	begin
 		case dataOut(7 downto 6) is
-			when "00" => condition <= '1';
-			when "01" => condition <= zFlag;
-			when "10" => condition <= not zFlag;
+			when "00" => condition <= '1'; -- unconditional ucode jump
+			when "01" => condition <= zFlag; -- ucode jump when Z==1
+			when "10" => condition <= not zFlag; -- ucode jump when Z==0
 			when others => condition <= 'X';
 		end case;
 	end process;

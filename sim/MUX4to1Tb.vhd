@@ -23,6 +23,7 @@ begin
         sel => sel,
         y => result);
 
+    -- mux each possible input to the output variable "result"
     process is
     begin
         sel <= "00";

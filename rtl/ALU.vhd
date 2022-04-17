@@ -4,14 +4,14 @@ use ieee.std_logic_1164.all;
 
 entity ALU is 
 port(
-    -- data inputs
-    fromDR : in std_logic_vector (7 downto 0);
+    -- the two operands
+    fromDR : in std_logic_vector (7 downto 0); -- FIXME rename!
     fromAC : in std_logic_vector (7 downto 0);
 
-    -- selects
+    -- selects, controls which operation ALU performs
     ALUS : in std_logic_vector (6 downto 0); -- for ALUS7 downto ALUS1
 
-    -- outputs
+    -- output, the result
     output : out std_logic_vector (7 downto 0) -- last dec doesn't have semicolon
 
 );
@@ -33,7 +33,7 @@ architecture rtl of ALU is
     signal arithmeticOutput : std_logic_vector (7 downto 0);
     signal logicalOutput : std_logic_vector (7 downto 0);
 
-    -- fix ALUS miswiring
+    -- fix ALUS miswiring, original design has reverse bit ordering
     signal arithmeticMUX2Sel : std_logic_vector (1 downto 0);
     signal logicalMUXSel : std_logic_vector (1 downto 0);
 

@@ -1,7 +1,8 @@
-entity ALUTb is
+-- this file was used for learning about VHDL
+entity HelloWorldTb is
 end entity;
 
-architecture sim of ALUTb is
+architecture sim of HelloWorldTb is
 begin
 
     process is

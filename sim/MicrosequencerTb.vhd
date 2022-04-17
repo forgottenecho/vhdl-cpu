@@ -35,22 +35,31 @@ begin
 		
 		-- every type of instr must wait 60 ns for FETCH1-3
 		
-		fakeIR <= "00001010"; -- INAC (1 state)
-		wait for 80 ns;
+		--fakeIR <= "00001010"; -- INAC (1 state)
+		--wait for 80 ns;
 		
-		fakeIR <= "00001011"; -- CLAC (1 state)
-		wait for 80 ns;
+		--fakeIR <= "00001011"; -- CLAC (1 state)
+		--wait for 80 ns;
 		
-		fakeIR <= "00000101"; -- JUMP (3 states)
+		--fakeIR <= "00000101"; -- JUMP (3 states)
+		--wait for 120 ns;
+		
+		--fakeIR <= "00000110"; -- JMPZ w/ Z=1 (4 states)
+		--fakeZ <= '1';
+		--wait for 140 ns;
+		
+		--fakeIR <= "00000110"; -- JMPZ w/ Z=0 (3 states)
+		--fakeZ <= '0';
+		--wait for 120 ns;
+		
+		fakeIR <= "00000111"; -- JPNZ w/ Z=1 (3 states), should perform microcode STATE jump but not PC jump
+		fakeZ <= '1';
 		wait for 120 ns;
 		
-		fakeIR <= "00000110"; -- JMPZ w/ Z=1 (4 states)
-		fakeZ <= '1';
+		fakeIR <= "00000111"; -- JPNZ w/ Z=0 (4 states), should NOT perform ucode STATE jump but should perform PC jump
+		fakeZ <= '0';
 		wait for 140 ns;
 		
-		fakeIR <= "00000110"; -- JMPZ w/ Z=0 (3 states)
-		fakeZ <= '0';
-		wait for 120 ns;
 		
 	end process;
 end architecture;	

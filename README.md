@@ -29,4 +29,4 @@ A relatively simple CPU implemented in VHDL
 ## Looking Forward
 - Load ROM from file
 - change ALU's sub-module's port mappings to not use intermediates
-- 
+- adjust design that so that JMPZ's condition is Z instead of Z' (similarly fix JPNZ)

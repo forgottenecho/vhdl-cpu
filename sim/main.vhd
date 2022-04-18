@@ -13,7 +13,6 @@ architecture sim of main is
 	signal mainBus : std_logic_vector(15 downto 0);
 	
 	signal mainClk : std_logic;
-	signal mainClk : std_logic;
 	signal ctrlSignals : std_logic_vector(26 downto 0);
 	
 	-- try to group the registers for convenience
@@ -48,10 +47,18 @@ architecture sim of main is
 		co => open);
 	
 	entity ALU : work.ALU(rtl) port map(
-		fromMEM <= mainBus(7 downto 0),
+		fromBUS <= mainBus(7 downto 0),
 		fromAC <= AC,
-		ALUS => 
+		ALUS <= csigs(26 downto 20)
 
+	)
+	entity MEM : work.64x8Ram(rtl) port map(
+		address <= AR,
+		write_in <= csigs(19),
+		read_in <= csigs(18),
+		clock <= mainClk,
+		data_in <= mainBus(7 downto 0),
+		mainBus(7 downto 0) <= data_out
 	)
 	-- this is a process, you can think of it as a program thread, it runs concurrently with other processes
 	process(clk)
@@ -152,20 +159,10 @@ architecture sim of main is
 			if csigs(17) = '1' then
 				MEM <= mainBus(7 downto 0);
 			end if;
-
-			-- READ
-			if csigs(18) = '1' then
-		
-			end if;
-
-			-- WRITE
-			if csigs(19) = '1' then
-
-			end if;
-
 			end if;
 			-- ALU is not a synchronous component, its control sigs are hard wired through port mapping
 			
 		end if;
+
 	end process;
 end architecture;

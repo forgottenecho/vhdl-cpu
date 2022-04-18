@@ -13,7 +13,7 @@ architecture sim of main is
 	signal mainBus : std_logic_vector(15 downto 0);
 	
 	signal mainClk : std_logic;
-	signal ctrlSignals : std_logic_vector(26 downto 0);
+	signal csigs : std_logic_vector(26 downto 0);
 	signal memToBusBuffer : std_logic_vector(7 downto 0);
 	signal busToMemBuffer : std_logic_vector(7 downto 0);
 	signal ALUOutput : std_logic_vector(7 downto 0);
@@ -26,7 +26,8 @@ architecture sim of main is
 	-- for incrementation
 	signal ARPlusOne : std_logic_vector(15 downto 0);
 	signal PCPlusOne : std_logic_vector(15 downto 0);
-	
+
+	begin
 	-- here you will create instances of all modular objects you are pulling into this file
 	entity useq : work.Microsequener(rtl) port map(
 		clk => mainClk,
@@ -54,20 +55,20 @@ architecture sim of main is
 		fromAC => AC,
 		ALUS => csigs(26 downto 20)
 		output => ALUOutput
-	)
-	entity MEM : work.64x8Ram(rtl) port map(
+	);
+	entity MEM : work.MainMem(rtl) port map(
 		address => AR,
 		write_in => csigs(19),
 		read_in => csigs(18),
 		clock => mainClk,
 		data_in => busToMemBuffer,
 		data_out => memToBusBuffer
-	)
+	);
 	-- this is a process, you can think of it as a program thread, it runs concurrently with other processes
-	process(clk)
+	process(mainClk)
 		-- any variables local to the process go here (I usually just use signals, which are global "variables" defined above)
 	begin
-		if rising_edge(clk) then
+		if rising_edge(mainClk) then
 			-- on every clock pulse, process the control signals
 			-- CONTROL SIGNAL MAPPINGS ARE HERE https://github.com/forgottenecho/vhdl-cpu/blob/main/README.md
 			

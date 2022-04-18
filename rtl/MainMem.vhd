@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity 64x8Ram is port(
+entity MainMem is port(
 address : in std_logic_vector(15 downto 0);
 write_in : in std_logic;
 read_in : in std_logic;
@@ -11,9 +11,9 @@ data_in : in std_logic_vector(7 downto 0);
 data_out : out std_logic_vector(7 downto 0);
 
 );
-end 64x8Ram;
+end entity MainMem;
 
-architecture rtl of 64x8Ram is
+architecture rtl of MainMem is
     type RamArray is array (0 to (64*1024) - 1) of std_logic_vector(7 downto 0);
 
     signal RamData: RamArray :=(others=>(others=>'0'));

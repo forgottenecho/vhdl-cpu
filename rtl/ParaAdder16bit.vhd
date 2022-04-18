@@ -1,10 +1,10 @@
 library ieee;
-use ieee.std_logic_1164.all
+use ieee.std_logic_1164.all;
 
 entity ParaAdder16bit is
 port(
-    a : in std_logic_vector (15 downto 0)
-    b : in std_logic_vector (15 downto 0)
+    a : in std_logic_vector (15 downto 0);
+    b : in std_logic_vector (15 downto 0);
     cin : in std_logic;
 
     s : out std_logic_vector (15 downto 0);
@@ -30,7 +30,7 @@ begin
     b => b(15 downto 8),
     cin => carry,
 
-    s => s(15 downto 8)
+    s => s(15 downto 8),
     co => co
 
     );

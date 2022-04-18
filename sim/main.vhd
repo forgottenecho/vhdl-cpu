@@ -14,6 +14,9 @@ architecture sim of main is
 	
 	signal mainClk : std_logic;
 	signal ctrlSignals : std_logic_vector(26 downto 0);
+	signal memToBusBuffer : std_logic_vector(7 downto 0);
+	signal busToMemBuffer : std_logic_vector(7 downto 0);
+	signal ALUOutput : std_logic_vector(7 downto 0);
 	
 	-- try to group the registers for convenience
 	signal AR : std_logic_vector(15 downto 0) := x"00";
@@ -47,18 +50,18 @@ architecture sim of main is
 		co => open);
 	
 	entity ALU : work.ALU(rtl) port map(
-		fromBUS <= mainBus(7 downto 0),
-		fromAC <= AC,
-		ALUS <= csigs(26 downto 20)
-
+		fromBUS => mainBus(7 downto 0),
+		fromAC => AC,
+		ALUS => csigs(26 downto 20)
+		output => ALUOutput
 	)
 	entity MEM : work.64x8Ram(rtl) port map(
-		address <= AR,
-		write_in <= csigs(19),
-		read_in <= csigs(18),
-		clock <= mainClk,
-		data_in <= mainBus(7 downto 0),
-		mainBus(7 downto 0) <= data_out
+		address => AR,
+		write_in => csigs(19),
+		read_in => csigs(18),
+		clock => mainClk,
+		data_in => busToMemBuffer,
+		data_out => memToBusBuffer
 	)
 	-- this is a process, you can think of it as a program thread, it runs concurrently with other processes
 	process(clk)
@@ -111,12 +114,12 @@ architecture sim of main is
 
 			-- ACLOAD (temp)
 			if csigs(8) = '1' then
-				AC <= ALU
+				AC <= ALUOutput
 			end if;
 
 			-- ZLOAD
 			if csigs(9) = '1' then
-				Z <= --nor gated ALU
+				Z <= nor ALUOutput
 			end if;
 			
 			-- PCBUS
@@ -152,12 +155,12 @@ architecture sim of main is
 
 			-- MEMBUS
 			if csigs(16) = '1' then
-				mainBus(7 downto 0) <= MEM;
+				mainBus(7 downto 0) <= memToBusBuffer;
 			end if;
 
 			-- BUSMEM
 			if csigs(17) = '1' then
-				MEM <= mainBus(7 downto 0);
+				busToMemBuffer <= mainBus(7 downto 0);
 			end if;
 			end if;
 			-- ALU is not a synchronous component, its control sigs are hard wired through port mapping

@@ -114,12 +114,12 @@ architecture sim of main is
 
 			-- ACLOAD (temp)
 			if csigs(8) = '1' then
-				AC <= ALUOutput
+				AC <= ALUOutput;
 			end if;
 
 			-- ZLOAD
 			if csigs(9) = '1' then
-				Z <= nor ALUOutput
+				Z <= nor ALUOutput;
 			end if;
 			
 			-- PCBUS
@@ -161,7 +161,6 @@ architecture sim of main is
 			-- BUSMEM
 			if csigs(17) = '1' then
 				busToMemBuffer <= mainBus(7 downto 0);
-			end if;
 			end if;
 			-- ALU is not a synchronous component, its control sigs are hard wired through port mapping
 			

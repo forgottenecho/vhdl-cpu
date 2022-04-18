@@ -5,6 +5,7 @@ use ieee.numeric_std.all;
 entity 64x8Ram is port(
 address : in std_logic_vector(15 downto 0);
 write_in : in std_logic;
+read_in : in std_logic;
 clock : in std_logic;
 data_in : in std_logic_vector(7 downto 0);
 data_out : out std_logic_vector(7 downto 0);
@@ -13,11 +14,9 @@ data_out : out std_logic_vector(7 downto 0);
 end 64x8Ram;
 
 architecture rtl of 64x8Ram is
-    type RamArray is array (0 to 63*1024) of std_logic_vector(7 downto 0);
+    type RamArray is array (0 to (64*1024) - 1) of std_logic_vector(7 downto 0);
 
-    signal RamData: RamArray :=(
-
-    );
+    signal RamData: RamArray :=(others=>(others=>'0'));
 
 begin
 process(clock)
@@ -26,8 +25,12 @@ begin
         if (write_in = '1') then
             RamData(to_integer(unsigned(address))) <= data_in;
         end if
-    end if
+        if (read_in = '1') then
+            data_out <= RamData(to_integer(unsigned(address)));
+        else
+            data_out <= "xxxxxxxx";
+        end if
 end process
 
-    data_out <= RamData(to_integer(unsigned(address)));
+    
 end architecture;

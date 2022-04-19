@@ -30,8 +30,8 @@ architecture rtl of MicroSequencer is
 		--   PADDING      CONTROL SIGNALS                 BT    CSel   ADDR
 		0 => x"0000000" & "000000000000000000000000000" & '0' & "00" & "000001", -- NOP1
 		1 => x"0000000" & "000000000000000010000000100" & '0' & "00" & "000010", -- FECTH1
-		2 => x"0000000" & "000000000010000000000010010" & '0' & "00" & "000011", -- FETCH2
-		3 => x"0000000" & "000000000000001000001000000" & '0' & "00" & "001110", -- FETCH3
+		2 => x"0000000" & "000000001010000000000010010" & '0' & "00" & "000011", -- FETCH2
+		3 => x"0000000" & "000000000000000000001000000" & '0' & "00" & "001110", -- FETCH3
         4 => x"0000000" & "000000000000000000000000000" & '0' & "00" & "000101", -- LDAC1
         5 => x"0000000" & "000000000000000000000000000" & '0' & "00" & "000110", -- LDAC2
         6 => x"0000000" & "000000000000000000000000000" & '0' & "00" & "000111", -- LDAC3
@@ -150,6 +150,12 @@ begin
 			when "10" => condition <= not zFlag; -- ucode jump when Z==0
 			when others => condition <= 'X';
 		end case;
+	end process;
+
+	-- pass along control signals when mem is accessed
+	process(dataOut(35 downto 9)) is
+	begin
+		ctrlSignals <= dataOut(35 downto 9);
 	end process;
 	
 end architecture;

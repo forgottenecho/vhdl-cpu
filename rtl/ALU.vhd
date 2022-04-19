@@ -5,7 +5,7 @@ use ieee.std_logic_1164.all;
 entity ALU is 
 port(
     -- the two operands
-    fromDR : in std_logic_vector (7 downto 0); -- FIXME rename!
+    fromBUS : in std_logic_vector (7 downto 0); -- FIXME rename!
     fromAC : in std_logic_vector (7 downto 0);
 
     -- selects, controls which operation ALU performs
@@ -47,7 +47,7 @@ begin
 
     arithmeticMUX2 : entity work.MUX4to1(rtl) port map(
         a => x"00",
-        b => fromDR,
+        b => fromBUS,
         c => NOTbus,
         d => "XXXXXXXX",
         sel => arithmeticMUX2Sel,
@@ -82,15 +82,15 @@ begin
     end process;
 
     -- handle base inputs to MUXs
-    process(fromDR, fromAC) is
+    process(fromBUS, fromAC) is
     begin
         -- input to arithmetic MUX
-        NOTbus <= not fromDR;
+        NOTbus <= not fromBUS;
 
         -- inputs to logic MUX
-        ANDresult <= fromDR and fromAC;
-        ORresult <= fromDR or fromAC;
-        XORresult <= fromDR xor fromAC;
+        ANDresult <= fromBUS and fromAC;
+        ORresult <= fromBUS or fromAC;
+        XORresult <= fromBUS xor fromAC;
         NOTresult <= not fromAC;
     end process;
 

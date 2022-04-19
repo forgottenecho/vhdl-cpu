@@ -17,7 +17,7 @@ architecture sim of ALUTb is
 
 begin
     ALU : entity work.ALU(rtl) port map(
-        fromDR => testDR,
+        fromBUS => testDR,
         fromAC => testAC,
         ALUS => ALUS,
         output => result);

@@ -84,47 +84,6 @@ begin
 	process(mainClk)
 		-- any variables local to the process go here (I usually just use signals, which are global "variables" defined above)
 	begin
-		-- PCBUS
-		if csigs(10) = '1' then
-			mainBus <= PC;
-		end if;
-
-		-- DRHBUS
-		if csigs(11) = '1' then
-			mainBus(15 downto 8) <= DR;
-		end if;
-			
-		-- DRLBUS
-		if csigs(12) = '1' then
-			mainBus(7 downto 0) <= DR;
-		end if;
-		
-		-- HANDLE SIGNALS 13-19
-		-- TRBUS
-		if csigs(13) = '1' then
-			mainBus(7 downto 0) <= TR;
-		end if;
-
-		-- RBUS
-		if csigs(14) = '1' then
-			mainBus(7 downto 0) <= R;
-		end if;
-
-		-- ACBUS
-		if csigs(15) = '1' then
-			mainBus(7 downto 0) <= AC;
-		end if;
-
-		-- MEMBUS
-		if csigs(16) = '1' then
-			mainBus(7 downto 0) <= memToBusBuffer;
-		end if;
-
-		-- BUSMEM
-		if csigs(17) = '1' then
-			busToMemBuffer <= mainBus(7 downto 0);
-		end if;
-
 		if rising_edge(mainClk) then
 			-- on every clock pulse, process the control signals
 			-- CONTROL SIGNAL MAPPINGS ARE HERE https://github.com/forgottenecho/vhdl-cpu/blob/main/README.md
@@ -185,5 +144,50 @@ begin
 			
 		end if;
 
+	end process;
+	
+	-- FIXME clear out unused parts of BUS & "XX"
+	process(csigs, memToBusBuffer) is
+	begin
+		-- PCBUS
+		if csigs(10) = '1' then
+			mainBus <= PC;
+		end if;
+
+		-- DRHBUS
+		if csigs(11) = '1' then
+			mainBus(15 downto 8) <= DR;
+		end if;
+			
+		-- DRLBUS
+		if csigs(12) = '1' then
+			mainBus(7 downto 0) <= DR;
+		end if;
+		
+		-- HANDLE SIGNALS 13-19
+		-- TRBUS
+		if csigs(13) = '1' then
+			mainBus(7 downto 0) <= TR;
+		end if;
+
+		-- RBUS
+		if csigs(14) = '1' then
+			mainBus(7 downto 0) <= R;
+		end if;
+
+		-- ACBUS
+		if csigs(15) = '1' then
+			mainBus(7 downto 0) <= AC;
+		end if;
+
+		-- MEMBUS
+		if csigs(16) = '1' then
+			mainBus(7 downto 0) <= memToBusBuffer;
+		end if;
+
+		-- BUSMEM
+		if csigs(17) = '1' then
+			busToMemBuffer <= mainBus(7 downto 0);
+		end if;
 	end process;
 end architecture;

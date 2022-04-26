@@ -149,6 +149,9 @@ begin
 	-- FIXME clear out unused parts of BUS & "XX"
 	process(csigs, memToBusBuffer) is
 	begin
+		-- clear the bus in case no one uses it this cycle
+		mainBus <= "XXXXXXXXXXXXXXXX";
+		
 		-- PCBUS
 		if csigs(10) = '1' then
 			mainBus <= PC;

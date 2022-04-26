@@ -14,7 +14,7 @@ A relatively simple CPU implemented in VHDL
 | 6 | IRLOAD | 17 | BUSMEM |
 | 7 | RLOAD | 18 | READ |
 | 8 | ACLOAD | 19 | WRITE |
-| 9 | ZLOAD | 20-26 | ALUS[0-6] |
+| 9 | ZLOAD | 20-26 | ALUS[1-7] |
 | 10 | PCBUS | |
 
 ### Microcode Memory Bit Fields

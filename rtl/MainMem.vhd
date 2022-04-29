@@ -25,15 +25,17 @@ begin
     -- initialize memory
     if is_start = '1' then
         is_start <= '0';
-        RamData(0) <= x"05"; -- JMP 1000
-        RamData(1) <= x"00"; -- GAMMA LOW
-        RamData(2) <= x"10"; -- GAMMA HIGH
+        RamData(0) <= x"0A"; -- INAC
+        RamData(1) <= x"00"; -- NOP
+        RamData(2) <= x"06"; -- JMPZ
+        RamData(3) <= x"33"; -- GAMMA LOW
+        RamData(4) <= x"12"; -- GAMMA HIGH
+        RamData(5) <= x"0B"; -- CLAC
+        RamData(6) <= x"05"; -- JMP 1000
+        RamData(7) <= x"01"; -- GAMMA LOW
+        RamData(8) <= x"00"; -- GAMMA HIGH
 
-        -- 0x1000 | Infinite loop
-        RamData(4096) <= x"0A"; -- INAC
-        RamData(4097) <= x"05"; -- JMP 1000
-        RamData(4098) <= x"00"; -- GAMMA LOW
-        RamData(4099) <= x"10"; -- GAMMA HIGH
+
 
         end if;
 

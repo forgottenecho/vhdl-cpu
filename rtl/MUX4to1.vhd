@@ -17,7 +17,7 @@ end entity;
 
 architecture rtl of MUX4to1 is
 begin
-    process(a, b, sel) is 
+    process(a, b, c, d, sel) is 
     begin
         case sel is
             when "00" => y <= a;

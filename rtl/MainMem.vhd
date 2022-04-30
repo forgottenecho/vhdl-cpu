@@ -45,8 +45,8 @@ begin
         RamData(4664) <= x"AD"; -- GAMMA LOW
         RamData(4665) <= x"DE"; -- GAMMA HIGH
         RamData(4666) <= x"0D"; -- OR
-        RamData(4667) <= x"0E"; -- XOR
-        RamData(4668) <= x"09"; -- SUB
+        RamData(4667) <= x"09"; -- SUB
+        RamData(4668) <= x"0E"; -- XOR
 
 
 		-- DATA

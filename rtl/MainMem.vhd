@@ -33,7 +33,7 @@ begin
         RamData(3) <= x"33"; -- GAMMA LOW
         RamData(4) <= x"12"; -- GAMMA HIGH
         RamData(5) <= x"0B"; -- CLAC
-        RamData(6) <= x"05"; -- JMP 1000
+        RamData(6) <= x"05"; -- JUMP
         RamData(7) <= x"01"; -- GAMMA LOW
         RamData(8) <= x"00"; -- GAMMA HIGH
 
@@ -47,8 +47,22 @@ begin
         RamData(4666) <= x"0D"; -- OR
         RamData(4667) <= x"09"; -- SUB
         RamData(4668) <= x"0E"; -- XOR
-
-
+        RamData(4669) <= x"0C"; -- AND
+        RamData(4670) <= x"08"; -- ADD
+        RamData(4671) <= x"07"; -- JPNZ
+        RamData(4672) <= x"61"; -- GAMMA LOW
+        RamData(4673) <= x"68"; -- GAMMA HIGH
+        RamData(4674) <= x"0F"; -- NOT
+		
+        RamData(26721) <= x"04"; -- MOVR
+        RamData(26722) <= x"01"; -- LDAC
+        RamData(26723) <= x"BE"; -- GAMMA LOW
+        RamData(26724) <= x"BA"; -- GAMMA HIGH
+        RamData(26725) <= x"03"; -- MVAC
+        RamData(26726) <= x"05"; -- JUMP
+        RamData(26727) <= x"4E"; -- GAMMA LOW
+        RamData(26728) <= x"12"; -- GAMMA HIGH
+		
 		-- DATA
         RamData(47806) <= x"00"; -- JMP 1000
         RamData(48879) <= x"AA"; -- GAMMA LOW

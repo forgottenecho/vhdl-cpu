@@ -26,7 +26,7 @@ architecture sim of main is
 	signal IR : std_Logic_vector(7 downto 0) := x"00";
 	signal R : std_Logic_vector(7 downto 0) := x"00";
 	signal AC : std_Logic_vector(7 downto 0) := x"00";
-	signal Z : std_logic := '1';
+	signal Z : std_logic := '0';
 
 	-- for incrementation
 	signal ARPlusOne : std_logic_vector(15 downto 0);

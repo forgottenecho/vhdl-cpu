@@ -60,7 +60,7 @@ begin
         RamData(26724) <= x"BA"; -- GAMMA HIGH
         RamData(26725) <= x"03"; -- MVAC
         RamData(26726) <= x"05"; -- JUMP
-        RamData(26727) <= x"4E"; -- GAMMA LOW
+        RamData(26727) <= x"3E"; -- GAMMA LOW
         RamData(26728) <= x"12"; -- GAMMA HIGH
 		
 		-- DATA

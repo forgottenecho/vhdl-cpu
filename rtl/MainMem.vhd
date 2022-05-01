@@ -53,6 +53,13 @@ begin
         RamData(4672) <= x"61"; -- GAMMA LOW
         RamData(4673) <= x"68"; -- GAMMA HIGH
         RamData(4674) <= x"0F"; -- NOT
+        RamData(4675) <= x"02"; -- STAC
+        RamData(4676) <= x"BE"; -- GAMMA LOW
+        RamData(4677) <= x"BA"; -- GAMMA HIGH
+        RamData(4678) <= x"0B"; -- CLAC
+        RamData(4679) <= x"01"; -- LDAC
+        RamData(4680) <= x"BE"; -- GAMMA LOW
+        RamData(4681) <= x"BA"; -- GAMMA HIGH
 		
         RamData(26721) <= x"04"; -- MOVR
         RamData(26722) <= x"01"; -- LDAC
